@@ -2,6 +2,12 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import math
 import statistics
+try:
+    import numpy as np
+    NUMPY_DISPONIVEL = True
+except ImportError:
+    NUMPY_DISPONIVEL = False
+    messagebox.showwarning("Aviso", "Biblioteca NumPy não encontrada. Algumas funcionalidades estarão limitadas.")
 
 # --------- Funções Matemáticas Gerais ---------
 def bhaskara(a, b, c):
@@ -124,6 +130,71 @@ def permutacao(n, k=None):
         return fatorial(n)
     return fatorial(n) / fatorial(n - k)
 
+def arranjo(n, k):
+    return fatorial(n) / fatorial(n - k)
+
+# --------- Funções de Probabilidade ---------
+def probabilidade_evento(casos_favoraveis, casos_possiveis):
+    return casos_favoraveis / casos_possiveis
+
+def probabilidade_condicional(p_a_e_b, p_b):
+    return p_a_e_b / p_b
+
+def probabilidade_bayes(p_b_dado_a, p_a, p_b):
+    return (p_b_dado_a * p_a) / p_b
+
+# --------- Funções de Matrizes (se numpy disponível) ---------
+if NUMPY_DISPONIVEL:
+    def matriz_soma(matriz_a, matriz_b):
+        return np.add(matriz_a, matriz_b)
+
+    def matriz_subtracao(matriz_a, matriz_b):
+        return np.subtract(matriz_a, matriz_b)
+
+    def matriz_multiplicacao(matriz_a, matriz_b):
+        return np.matmul(matriz_a, matriz_b)
+
+    def matriz_transposta(matriz):
+        return np.transpose(matriz)
+
+    def matriz_determinante(matriz):
+        return np.linalg.det(matriz)
+
+    def matriz_inversa(matriz):
+        try:
+            return np.linalg.inv(matriz)
+        except:
+            return None  # Matriz singular
+
+    # --------- Funções de Sistemas Lineares ---------
+    def resolver_sistema_lineares(matriz_coeficientes, vetor_constantes):
+        try:
+            return np.linalg.solve(matriz_coeficientes, vetor_constantes)
+        except:
+            return None  # Sistema sem solução única
+else:
+    # Funções placeholder quando numpy não está disponível
+    def matriz_soma(matriz_a, matriz_b):
+        return "Numpy não disponível"
+    
+    def matriz_subtracao(matriz_a, matriz_b):
+        return "Numpy não disponível"
+    
+    def matriz_multiplicacao(matriz_a, matriz_b):
+        return "Numpy não disponível"
+    
+    def matriz_transposta(matriz):
+        return "Numpy não disponível"
+    
+    def matriz_determinante(matriz):
+        return "Numpy não disponível"
+    
+    def matriz_inversa(matriz):
+        return "Numpy não disponível"
+    
+    def resolver_sistema_lineares(matriz_coeficientes, vetor_constantes):
+        return "Numpy não disponível"
+
 # --------- Funções de Cálculo ---------
 def derivada_polinomial(coeficientes):
     # coeficientes: lista [a, b, c, ...] para ax^n + bx^(n-1) + ...
@@ -228,7 +299,7 @@ def atualizar_labels(event=None):
     
     # Esconder todos os widgets primeiro (com tratamento de erro)
     widgets_para_esconder = [label2, entry2, label3, entry3, label4, entry4, label5, entry5, label6, entry6,
-                            op_circ, op_pyth, op_poligono, op_prisma, op_trig, op_alg, op_fin]
+                            op_circ, op_pyth, op_poligono, op_prisma, op_trig, op_alg, op_fin, op_prob, op_matriz]
     
     for widget in widgets_para_esconder:
         try:
@@ -284,6 +355,18 @@ def atualizar_labels(event=None):
     elif opcao == "Álgebra":
         op_alg.pack(pady=5)
         atualizar_algebra()
+
+    elif opcao == "Probabilidade":
+        op_prob.pack(pady=5)
+        atualizar_probabilidade()
+
+    elif opcao == "Matrizes":
+        op_matriz.pack(pady=5)
+        atualizar_matrizes()
+
+    elif opcao == "Sistemas Lineares":
+        label1.config(text="Número de variáveis:")
+        entry1.pack(pady=2)
 
     elif opcao == "Estatística":
         label1.config(text="Dados (separados por espaço):")
@@ -469,6 +552,55 @@ def atualizar_algebra():
         label2.pack(pady=2)
         entry2.pack(pady=2)
 
+def atualizar_probabilidade():
+    escolha = op_prob.get()
+    
+    for widget in [label1, entry1, label2, entry2, label3, entry3]:
+        widget.pack_forget()
+    
+    if escolha == "Probabilidade Simples":
+        label1.config(text="Casos favoráveis:")
+        label2.config(text="Casos possíveis:")
+        label1.pack(pady=2)
+        entry1.pack(pady=2)
+        label2.pack(pady=2)
+        entry2.pack(pady=2)
+    elif escolha == "Probabilidade Condicional":
+        label1.config(text="P(A e B):")
+        label2.config(text="P(B):")
+        label1.pack(pady=2)
+        entry1.pack(pady=2)
+        label2.pack(pady=2)
+        entry2.pack(pady=2)
+    elif escolha == "Teorema de Bayes":
+        label1.config(text="P(B|A):")
+        label2.config(text="P(A):")
+        label3.config(text="P(B):")
+        label1.pack(pady=2)
+        entry1.pack(pady=2)
+        label2.pack(pady=2)
+        entry2.pack(pady=2)
+        label3.pack(pady=2)
+        entry3.pack(pady=2)
+
+def atualizar_matrizes():
+    escolha = op_matriz.get()
+    
+    for widget in [label1, entry1, label2, entry2, label3, entry3]:
+        widget.pack_forget()
+    
+    if escolha in ["Soma", "Subtração", "Multiplicação"]:
+        label1.config(text="Matriz A (linhas separadas por ;):")
+        label2.config(text="Matriz B (linhas separadas por ;):")
+        label1.pack(pady=2)
+        entry1.pack(pady=2)
+        label2.pack(pady=2)
+        entry2.pack(pady=2)
+    elif escolha in ["Transposta", "Determinante", "Inversa"]:
+        label1.config(text="Matriz (linhas separadas por ;):")
+        label1.pack(pady=2)
+        entry1.pack(pady=2)
+
 def atualizar_financeira():
     escolha = op_fin.get()
     
@@ -518,7 +650,7 @@ def calcular():
                 res = area_circulo(r)
             elif escolha == "Circunferência":
                 res = circunferencia(r)
-            elif escolha == "Diâmetro":
+            elif escolha == "Diámetro":
                 res = diametro(r)
             resultado.set(f"{escolha} = {res:.4f}")
 
@@ -642,7 +774,76 @@ def calcular():
                 else:
                     comb = combinacao(n, k)
                     perm = permutacao(n, k)
-                    resultado.set(f"C({n},{k}) = {comb}\nP({n},{k}) = {perm}")
+                    arranj = arranjo(n, k)
+                    resultado.set(f"C({n},{k}) = {comb}\nP({n},{k}) = {perm}\nA({n},{k}) = {arranj}")
+
+        elif opcao == "Probabilidade":
+            escolha = op_prob.get()
+            if escolha == "Probabilidade Simples":
+                favoraveis = float(entry1.get().replace(",", "."))
+                possiveis = float(entry2.get().replace(",", "."))
+                prob = probabilidade_evento(favoraveis, possiveis)
+                resultado.set(f"P = {prob:.4f} ou {prob*100:.2f}%")
+            elif escolha == "Probabilidade Condicional":
+                p_a_e_b = float(entry1.get().replace(",", "."))
+                p_b = float(entry2.get().replace(",", "."))
+                prob = probabilidade_condicional(p_a_e_b, p_b)
+                resultado.set(f"P(A|B) = {prob:.4f} ou {prob*100:.2f}%")
+            elif escolha == "Teorema de Bayes":
+                p_b_dado_a = float(entry1.get().replace(",", "."))
+                p_a = float(entry2.get().replace(",", "."))
+                p_b = float(entry3.get().replace(",", "."))
+                prob = probabilidade_bayes(p_b_dado_a, p_a, p_b)
+                resultado.set(f"P(A|B) = {prob:.4f} ou {prob*100:.2f}%")
+
+        elif opcao == "Matrizes":
+            escolha = op_matriz.get()
+            
+            def parse_matriz(texto):
+                linhas = texto.split(';')
+                matriz = []
+                for linha in linhas:
+                    elementos = [float(x.replace(",", ".")) for x in linha.split()]
+                    matriz.append(elementos)
+                return np.array(matriz) if NUMPY_DISPONIVEL else matriz
+            
+            if escolha in ["Soma", "Subtração", "Multiplicação"]:
+                matriz_a = parse_matriz(entry1.get())
+                matriz_b = parse_matriz(entry2.get())
+                
+                if escolha == "Soma":
+                    resultado_matriz = matriz_soma(matriz_a, matriz_b)
+                elif escolha == "Subtração":
+                    resultado_matriz = matriz_subtracao(matriz_a, matriz_b)
+                elif escolha == "Multiplicação":
+                    resultado_matriz = matriz_multiplicacao(matriz_a, matriz_b)
+                
+                resultado.set(f"Resultado:\n{resultado_matriz}")
+                
+            elif escolha == "Transposta":
+                matriz = parse_matriz(entry1.get())
+                resultado_matriz = matriz_transposta(matriz)
+                resultado.set(f"Matriz transposta:\n{resultado_matriz}")
+                
+            elif escolha == "Determinante":
+                matriz = parse_matriz(entry1.get())
+                det = matriz_determinante(matriz)
+                resultado.set(f"Determinante = {det:.4f}")
+                
+            elif escolha == "Inversa":
+                matriz = parse_matriz(entry1.get())
+                inversa = matriz_inversa(matriz)
+                if inversa is None:
+                    resultado.set("Matriz singular (não possui inversa)")
+                else:
+                    resultado.set(f"Matriz inversa:\n{inversa}")
+
+        elif opcao == "Sistemas Lineares":
+            if not NUMPY_DISPONIVEL:
+                resultado.set("Funcionalidade requer NumPy. Instale com: pip install numpy")
+            else:
+                n = int(entry1.get())
+                resultado.set(f"Para {n} variáveis, digite a matriz de coeficientes\n e o vetor de constantes separados por ponto e vírgula")
 
         elif opcao == "Estatística":
             dados = entry1.get()
@@ -696,38 +897,54 @@ def calcular():
 # --------- Interface Tkinter ---------
 janela = tk.Tk()
 janela.title("Calculadora Matemática Completa")
-janela.geometry("700x900")
+janela.geometry("700x700")  # Reduzida a altura para caber melhor na tela
 janela.resizable(False, False)
 janela.configure(bg="#2c3e50")
 
-# Frame principal
+# Frame principal com scrollbar
 main_frame = tk.Frame(janela, bg="#2c3e50")
 main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-# Título
-tk.Label(main_frame, text="Calculadora Matemática Completa", font=("Arial", 20, "bold"), 
-         bg="#2c3e50", fg="#ecf0f1").pack(pady=10)
+# Canvas e Scrollbar para permitir rolagem
+canvas = tk.Canvas(main_frame, bg="#2c3e50")
+scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+scrollable_frame = tk.Frame(canvas, bg="#2c3e50")
 
-# Área de resultado (em cima)
-frame_resultado = tk.Frame(main_frame, bg="#34495e", relief=tk.RAISED, bd=2)
-frame_resultado.pack(fill=tk.X, pady=10)
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+)
+
+canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.configure(yscrollcommand=scrollbar.set)
+
+canvas.pack(side="left", fill="both", expand=True)
+scrollbar.pack(side="right", fill="y")
+
+# Título
+tk.Label(scrollable_frame, text="Calculadora Matemática Completa", font=("Arial", 16, "bold"), 
+         bg="#2c3e50", fg="#ecf0f1").pack(pady=5)
+
+# Área de resultado (em cima) - REDUZIDA
+frame_resultado = tk.Frame(scrollable_frame, bg="#34495e", relief=tk.RAISED, bd=2)
+frame_resultado.pack(fill=tk.X, pady=5)
 
 resultado = tk.StringVar()
 lbl_resultado = tk.Label(frame_resultado, textvariable=resultado, justify="left", 
-                        font=("Consolas", 12), bg="#34495e", fg="#ecf0f1", 
-                        height=6, wraplength=650)
-lbl_resultado.pack(padx=10, pady=10)
+                        font=("Consolas", 9), bg="#34495e", fg="#ecf0f1", 
+                        height=3, wraplength=650)  # Reduzida a altura
+lbl_resultado.pack(padx=10, pady=5)
 
 # Preview para calculadora normal
 preview = tk.StringVar()
 lbl_preview = tk.Label(frame_resultado, textvariable=preview, justify="right",
-                      font=("Consolas", 12), bg="#34495e", fg="#bdc3c7",
+                      font=("Consolas", 9), bg="#34495e", fg="#bdc3c7",
                       height=1)
 lbl_preview.pack(anchor="e", padx=10, pady=(0, 5))
 
 # Frame para operações
-frame_operacoes = tk.Frame(main_frame, bg="#2c3e50")
-frame_operacoes.pack(fill=tk.X, pady=10)
+frame_operacoes = tk.Frame(scrollable_frame, bg="#2c3e50")
+frame_operacoes.pack(fill=tk.X, pady=5)
 
 # Escolha da operação
 tk.Label(frame_operacoes, text="Escolha a operação:", bg="#2c3e50", 
@@ -742,6 +959,9 @@ combo = ttk.Combobox(frame_operacoes, values=[
     "Prismas/Sólidos",
     "Trigonometria",
     "Álgebra",
+    "Probabilidade",
+    "Matrizes",
+    "Sistemas Lineares",
     "Estatística",
     "Matemática Financeira",
     "Cálculo",
@@ -753,88 +973,97 @@ combo.bind("<<ComboboxSelected>>", atualizar_labels)
 
 # Frame para entradas
 frame_entradas = tk.Frame(frame_operacoes, bg="#2c3e50")
-frame_entradas.pack(pady=10)
+frame_entradas.pack(pady=5)
 
 # Widgets principais
 label1 = tk.Label(frame_entradas, text="a:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
 label1.pack()
-entry1 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry1 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))  # Reduzido o tamanho
 entry1.pack(pady=2)
 entry1.bind("<KeyRelease>", atualizar_previa)
 
 label2 = tk.Label(frame_entradas, text="b:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry2 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry2 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 label3 = tk.Label(frame_entradas, text="c:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry3 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry3 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 label4 = tk.Label(frame_entradas, text="d:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry4 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry4 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 label5 = tk.Label(frame_entradas, text="e:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry5 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry5 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 label6 = tk.Label(frame_entradas, text="f:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry6 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry6 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 # Combos internos para operações específicas
-op_circ = ttk.Combobox(frame_entradas, values=["Área", "Circunferência", "Diâmetro"], 
-                      state="readonly", width=20, font=("Arial", 10))
+op_circ = ttk.Combobox(frame_entradas, values=["Área", "Circunferência", "Diámetro"], 
+                      state="readonly", width=18, font=("Arial", 9))  # Reduzido o tamanho
 op_circ.current(0)
 
 op_pyth = ttk.Combobox(frame_entradas, values=["Hipotenusa", "Cateto faltante"], 
-                      state="readonly", width=20, font=("Arial", 10))
+                      state="readonly", width=18, font=("Arial", 9))
 op_pyth.current(0)
 op_pyth.bind("<<ComboboxSelected>>", lambda e: atualizar_pitagoras())
 
 op_poligono = ttk.Combobox(frame_entradas, values=["Área", "Ângulos"], 
-                          state="readonly", width=20, font=("Arial", 10))
+                          state="readonly", width=18, font=("Arial", 9))
 op_poligono.current(0)
 op_poligono.bind("<<ComboboxSelected>>", lambda e: atualizar_poligono())
 
 op_prisma = ttk.Combobox(frame_entradas, values=["Prisma Retangular", "Prisma Triangular", "Cilindro", "Esfera", "Cone"], 
-                        state="readonly", width=20, font=("Arial", 10))
+                        state="readonly", width=18, font=("Arial", 9))
 op_prisma.current(0)
 op_prisma.bind("<<ComboboxSelected>>", lambda e: atualizar_prisma())
 
 op_trig = ttk.Combobox(frame_entradas, values=["Lei dos Senos", "Lei dos Cossenos"], 
-                      state="readonly", width=20, font=("Arial", 10))
+                      state="readonly", width=18, font=("Arial", 9))
 op_trig.current(0)
 op_trig.bind("<<ComboboxSelected>>", lambda e: atualizar_trigonometria())
 
-# CORREÇÃO: troquei tttk por ttk
 op_alg = ttk.Combobox(frame_entradas, values=["Progressão Aritmética", "Progressão Geométrica", "Análise Combinatória"], 
-                      state="readonly", width=20, font=("Arial", 10))
+                      state="readonly", width=18, font=("Arial", 9))
 op_alg.current(0)
 op_alg.bind("<<ComboboxSelected>>", lambda e: atualizar_algebra())
 
+op_prob = ttk.Combobox(frame_entradas, values=["Probabilidade Simples", "Probabilidade Condicional", "Teorema de Bayes"], 
+                      state="readonly", width=18, font=("Arial", 9))
+op_prob.current(0)
+op_prob.bind("<<ComboboxSelected>>", lambda e: atualizar_probabilidade())
+
+op_matriz = ttk.Combobox(frame_entradas, values=["Soma", "Subtração", "Multiplicação", "Transposta", "Determinante", "Inversa"], 
+                      state="readonly", width=18, font=("Arial", 9))
+op_matriz.current(0)
+op_matriz.bind("<<ComboboxSelected>>", lambda e: atualizar_matrizes())
+
 op_fin = ttk.Combobox(frame_entradas, values=["Juros Simples", "Prestação Fixa"], 
-                     state="readonly", width=20, font=("Arial", 10))
+                     state="readonly", width=18, font=("Arial", 9))
 op_fin.current(0)
 op_fin.bind("<<ComboboxSelected>>", lambda e: atualizar_financeira())
 
 # Campos específicos para Pitágoras
 label_pyth1 = tk.Label(frame_entradas, text="", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry_pyth1 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry_pyth1 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 label_pyth2 = tk.Label(frame_entradas, text="", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 10))
-entry_pyth2 = tk.Entry(frame_entradas, width=30, font=("Arial", 12))
+entry_pyth2 = tk.Entry(frame_entradas, width=25, font=("Arial", 10))
 
 # Botões de ação
 frame_botoes = tk.Frame(frame_operacoes, bg="#2c3e50")
-frame_botoes.pack(pady=10)
+frame_botoes.pack(pady=5)
 
-btn_calcular = tk.Button(frame_botoes, text="Calcular", font=("Arial", 12, "bold"), 
+btn_calcular = tk.Button(frame_botoes, text="Calcular", font=("Arial", 10, "bold"), 
                 bg="#27ae60", fg="white", width=10, command=calcular)
 btn_calcular.pack(side=tk.LEFT, padx=5)
 
-btn_limpar = tk.Button(frame_botoes, text="Limpar Tudo", font=("Arial", 12), 
+btn_limpar = tk.Button(frame_botoes, text="Limpar Tudo", font=("Arial", 10), 
                 bg="#e74c3c", fg="white", width=10, command=limpar_tudo)
 btn_limpar.pack(side=tk.LEFT, padx=5)
 
 # --------- Teclado Numérico Ampliado ---------
-frame_teclado = tk.Frame(main_frame, bg="#2c3e50")
-frame_teclado.pack(pady=10)
+frame_teclado = tk.Frame(scrollable_frame, bg="#2c3e50")
+frame_teclado.pack(pady=5)
 
 tk.Label(frame_teclado, text="Teclado:", font=("Arial", 12, "bold"), 
          bg="#2c3e50", fg="#ecf0f1").pack()
@@ -843,7 +1072,7 @@ tk.Label(frame_teclado, text="Teclado:", font=("Arial", 12, "bold"),
 frame_teclas_principais = tk.Frame(frame_teclado, bg="#2c3e50")
 frame_teclas_principais.pack()
 
-# Teclas numéricas
+# Teclas numéricas (botões menores)
 botoes_numericos = [
     ['7', '8', '9', '(', ')', '⌫'],
     ['4', '5', '6', '*', '/', 'C'],
@@ -856,30 +1085,30 @@ for linha in botoes_numericos:
     frame_linha.pack()
     for tecla in linha:
         if tecla == '=':
-            btn = tk.Button(frame_linha, text=tecla, width=5, height=2,
-                           font=("Arial", 10, "bold"), bg="#3498db", fg="white",
+            btn = tk.Button(frame_linha, text=tecla, width=4, height=2,  # Botões menores
+                           font=("Arial", 9, "bold"), bg="#3498db", fg="white",
                            command=calcular)
         elif tecla == 'C':
-            btn = tk.Button(frame_linha, text=tecla, width=5, height=2,
-                           font=("Arial", 10, "bold"), bg="#e74c3c", fg="white",
+            btn = tk.Button(frame_linha, text=tecla, width=4, height=2,
+                           font=("Arial", 9, "bold"), bg="#e74c3c", fg="white",
                            command=limpar_tudo)
         elif tecla == '⌫':
-            btn = tk.Button(frame_linha, text=tecla, width=5, height=2,
-                           font=("Arial", 10), bg="#95a5a6", fg="white",
+            btn = tk.Button(frame_linha, text=tecla, width=4, height=2,
+                           font=("Arial", 9), bg="#95a5a6", fg="white",
                            command=apagar_caractere)
         elif tecla in ['π', '√']:
-            btn = tk.Button(frame_linha, text=tecla, width=5, height=2,
-                           font=("Arial", 10, "bold"), bg="#16a085", fg="white",
+            btn = tk.Button(frame_linha, text=tecla, width=4, height=2,
+                           font=("Arial", 9, "bold"), bg="#16a085", fg="white",
                            command=lambda t=tecla: inserir_texto('math.pi' if t == 'π' else 'math.sqrt('))
         else:
-            btn = tk.Button(frame_linha, text=tecla, width=5, height=2,
-                           font=("Arial", 10), bg="#34495e", fg="#ecf0f1",
+            btn = tk.Button(frame_linha, text=tecla, width=4, height=2,
+                           font=("Arial", 9), bg="#34495e", fg="#ecf0f1",
                            command=lambda t=tecla: inserir_texto(t))
-        btn.pack(side=tk.LEFT, padx=2, pady=2)
+        btn.pack(side=tk.LEFT, padx=1, pady=1)  # Menor espaçamento
 
-# Teclas de funções especiais
+# Teclas de funções especiais (botões menores)
 frame_funcoes = tk.Frame(frame_teclado, bg="#2c3e50")
-frame_funcoes.pack(pady=10)
+frame_funcoes.pack(pady=5)
 
 funcoes_especiais = [
     ('sin', 'math.sin('),
@@ -896,10 +1125,10 @@ for i in range(0, len(funcoes_especiais), 4):
     frame_linha.pack()
     for funcao in funcoes_especiais[i:i+4]:
         texto, comando = funcao
-        btn = tk.Button(frame_linha, text=texto, width=8, height=2,
-                       font=("Arial", 9), bg="#8e44ad", fg="white",
+        btn = tk.Button(frame_linha, text=texto, width=6, height=2,  # Botões menores
+                       font=("Arial", 8), bg="#8e44ad", fg="white",
                        command=lambda c=comando: inserir_texto(c))
-        btn.pack(side=tk.LEFT, padx=2, pady=2)
+        btn.pack(side=tk.LEFT, padx=1, pady=1)  # Menor espaçamento
 
 # Inicializa labels corretos
 atualizar_labels()
