@@ -901,6 +901,9 @@ janela.geometry("700x600")  # Reduzida a altura para caber melhor na tela
 janela.resizable(False, False)
 janela.configure(bg="#2c3e50")
 
+# Desabilita o foco automático em campos de entrada
+janela.option_add('*Entry*TakeFocus', 0)
+
 # Frame principal com scrollbar
 main_frame = tk.Frame(janela, bg="#2c3e50")
 main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)  # Reduzido o padding vertical
@@ -981,21 +984,28 @@ label1.pack()
 entry1 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))  # Reduzido o tamanho e fonte
 entry1.pack(pady=1)  # Menor padding
 entry1.bind("<KeyRelease>", atualizar_previa)
+# Desabilita o foco automático e o teclado virtual
+entry1.configure(takefocus=0)
 
 label2 = tk.Label(frame_entradas, text="b:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry2 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry2.configure(takefocus=0)
 
 label3 = tk.Label(frame_entradas, text="c:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry3 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry3.configure(takefocus=0)
 
 label4 = tk.Label(frame_entradas, text="d:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry4 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry4.configure(takefocus=0)
 
 label5 = tk.Label(frame_entradas, text="e:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry5 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry5.configure(takefocus=0)
 
 label6 = tk.Label(frame_entradas, text="f:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry6 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry6.configure(takefocus=0)
 
 # Combos internos para operações específicas
 op_circ = ttk.Combobox(frame_entradas, values=["Área", "Circunferência", "Diámetro"], 
@@ -1045,9 +1055,11 @@ op_fin.bind("<<ComboboxSelected>>", lambda e: atualizar_financeira())
 # Campos específicos para Pitágoras
 label_pyth1 = tk.Label(frame_entradas, text="", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry_pyth1 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry_pyth1.configure(takefocus=0)
 
 label_pyth2 = tk.Label(frame_entradas, text="", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 entry_pyth2 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry_pyth2.configure(takefocus=0)
 
 # Botões de ação
 frame_botoes = tk.Frame(frame_operacoes, bg="#2c3e50")
