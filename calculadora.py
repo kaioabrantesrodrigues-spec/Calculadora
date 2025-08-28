@@ -597,7 +597,7 @@ def atualizar_matrizes():
         label2.pack(pady=2)
         entry2.pack(pady=2)
     elif escolha in ["Transposta", "Determinante", "Inversa"]:
-        label1.config(text="Matriz (linhas separadas por ;):")
+        label1.config(text="Matriz (linhas separadas by ;):")
         label1.pack(pady=2)
         entry1.pack(pady=2)
 
@@ -896,20 +896,20 @@ def calcular():
 
 # --------- Interface Tkinter ---------
 janela = tk.Tk()
-janela.title("Calculadora Matemática Completa")
-janela.geometry("700x600")  # Reduzida a altura para caber melhor na tela
+janela.title("Niggalator - Calculadora Matemática Completa")
+janela.geometry("700x600")
 janela.resizable(False, False)
 janela.configure(bg="#2c3e50")
 
-# Desabilita o foco automático em campos de entrada
+# Desabilita o foco automático em campos de entrada para evitar teclado virtual
 janela.option_add('*Entry*TakeFocus', 0)
 
 # Frame principal com scrollbar
 main_frame = tk.Frame(janela, bg="#2c3e50")
-main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)  # Reduzido o padding vertical
+main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
 # Canvas e Scrollbar para permitir rolagem
-canvas = tk.Canvas(main_frame, bg="#2c3e50", height=500)  # Altura fixa para o canvas
+canvas = tk.Canvas(main_frame, bg="#2c3e50", height=500)
 scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
 scrollable_frame = tk.Frame(canvas, bg="#2c3e50")
 
@@ -925,33 +925,33 @@ canvas.pack(side="left", fill="both", expand=True)
 scrollbar.pack(side="right", fill="y")
 
 # Título
-tk.Label(scrollable_frame, text="Calculadora Matemática Completa", font=("Arial", 14, "bold"), 
-         bg="#2c3e50", fg="#ecf0f1").pack(pady=3)  # Reduzido o padding
+tk.Label(scrollable_frame, text="Niggalator - Calculadora Completa", font=("Arial", 14, "bold"), 
+         bg="#2c3e50", fg="#ecf0f1").pack(pady=3)
 
 # Área de resultado (em cima) - REDUZIDA
-frame_resultado = tk.Frame(scrollable_frame, bg="#34495e", relief=tk.RAISED, bd=1)  # Borda mais fina
-frame_resultado.pack(fill=tk.X, pady=3)  # Menor padding
+frame_resultado = tk.Frame(scrollable_frame, bg="#34495e", relief=tk.RAISED, bd=1)
+frame_resultado.pack(fill=tk.X, pady=3)
 
 resultado = tk.StringVar()
 lbl_resultado = tk.Label(frame_resultado, textvariable=resultado, justify="left", 
                         font=("Consolas", 8), bg="#34495e", fg="#ecf0f1", 
-                        height=2, wraplength=650)  # Reduzida a altura e fonte
-lbl_resultado.pack(padx=8, pady=3)  # Menor padding
+                        height=2, wraplength=650)
+lbl_resultado.pack(padx=8, pady=3)
 
 # Preview para calculadora normal
 preview = tk.StringVar()
 lbl_preview = tk.Label(frame_resultado, textvariable=preview, justify="right",
                       font=("Consolas", 8), bg="#34495e", fg="#bdc3c7",
                       height=1)
-lbl_preview.pack(anchor="e", padx=8, pady=(0, 3))  # Menor padding
+lbl_preview.pack(anchor="e", padx=8, pady=(0, 3))
 
 # Frame para operações
 frame_operacoes = tk.Frame(scrollable_frame, bg="#2c3e50")
-frame_operacoes.pack(fill=tk.X, pady=3)  # Menor padding
+frame_operacoes.pack(fill=tk.X, pady=3)
 
 # Escolha da operação
 tk.Label(frame_operacoes, text="Escolha a operação:", bg="#2c3e50", 
-         fg="#ecf0f1", font=("Arial", 11)).pack()  # Fonte ligeiramente menor
+         fg="#ecf0f1", font=("Arial", 11)).pack()
 
 combo = ttk.Combobox(frame_operacoes, values=[
     "Equação 2º Grau",
@@ -969,22 +969,22 @@ combo = ttk.Combobox(frame_operacoes, values=[
     "Matemática Financeira",
     "Cálculo",
     "Calculadora normal"
-], state="readonly", width=22, font=("Arial", 9))  # Menor largura e fonte
+], state="readonly", width=22, font=("Arial", 9))
 combo.current(0)
-combo.pack(pady=3)  # Menor padding
+combo.pack(pady=3)
 combo.bind("<<ComboboxSelected>>", atualizar_labels)
 
 # Frame para entradas
 frame_entradas = tk.Frame(frame_operacoes, bg="#2c3e50")
-frame_entradas.pack(pady=3)  # Menor padding
+frame_entradas.pack(pady=3)
 
 # Widgets principais
-label1 = tk.Label(frame_entradas, text="a:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))  # Fonte menor
+label1 = tk.Label(frame_entradas, text="a:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
 label1.pack()
-entry1 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))  # Reduzido o tamanho e fonte
-entry1.pack(pady=1)  # Menor padding
+entry1 = tk.Entry(frame_entradas, width=22, font=("Arial", 9))
+entry1.pack(pady=1)
 entry1.bind("<KeyRelease>", atualizar_previa)
-# Desabilita o foco automático e o teclado virtual
+# Desabilita o foco para evitar teclado virtual
 entry1.configure(takefocus=0)
 
 label2 = tk.Label(frame_entradas, text="b:", bg="#2c3e50", fg="#ecf0f1", font=("Arial", 9))
@@ -1009,7 +1009,7 @@ entry6.configure(takefocus=0)
 
 # Combos internos para operações específicas
 op_circ = ttk.Combobox(frame_entradas, values=["Área", "Circunferência", "Diámetro"], 
-                      state="readonly", width=16, font=("Arial", 8))  # Reduzido o tamanho
+                      state="readonly", width=16, font=("Arial", 8))
 op_circ.current(0)
 
 op_pyth = ttk.Combobox(frame_entradas, values=["Hipotenusa", "Cateto faltante"], 
@@ -1017,6 +1017,7 @@ op_pyth = ttk.Combobox(frame_entradas, values=["Hipotenusa", "Cateto faltante"],
 op_pyth.current(0)
 op_pyth.bind("<<ComboboxSelected>>", lambda e: atualizar_pitagoras())
 
+# CORREÇÃO: troquei tttk por ttk
 op_poligono = ttk.Combobox(frame_entradas, values=["Área", "Ângulos"], 
                           state="readonly", width=16, font=("Arial", 8))
 op_poligono.current(0)
@@ -1063,19 +1064,19 @@ entry_pyth2.configure(takefocus=0)
 
 # Botões de ação
 frame_botoes = tk.Frame(frame_operacoes, bg="#2c3e50")
-frame_botoes.pack(pady=3)  # Menor padding
+frame_botoes.pack(pady=3)
 
 btn_calcular = tk.Button(frame_botoes, text="Calcular", font=("Arial", 9, "bold"), 
-                bg="#27ae60", fg="white", width=8, command=calcular)  # Botão menor
-btn_calcular.pack(side=tk.LEFT, padx=3)  # Menor padding
+                bg="#27ae60", fg="white", width=8, command=calcular)
+btn_calcular.pack(side=tk.LEFT, padx=3)
 
 btn_limpar = tk.Button(frame_botoes, text="Limpar Tudo", font=("Arial", 9), 
-                bg="#e74c3c", fg="white", width=8, command=limpar_tudo)  # Botão menor
-btn_limpar.pack(side=tk.LEFT, padx=3)  # Menor padding
+                bg="#e74c3c", fg="white", width=8, command=limpar_tudo)
+btn_limpar.pack(side=tk.LEFT, padx=3)
 
 # --------- Teclado Numérico Ampliado ---------
 frame_teclado = tk.Frame(scrollable_frame, bg="#2c3e50")
-frame_teclado.pack(pady=3, anchor="w")  # Menor padding e alinhado à esquerda
+frame_teclado.pack(pady=3, anchor="w")
 
 tk.Label(frame_teclado, text="Teclado:", font=("Arial", 11, "bold"), 
          bg="#2c3e50", fg="#ecf0f1").pack()
@@ -1097,7 +1098,7 @@ for linha in botoes_numericos:
     frame_linha.pack()
     for tecla in linha:
         if tecla == '=':
-            btn = tk.Button(frame_linha, text=tecla, width=3, height=1,  # Botões menores
+            btn = tk.Button(frame_linha, text=tecla, width=3, height=1,
                            font=("Arial", 8, "bold"), bg="#3498db", fg="white",
                            command=calcular)
         elif tecla == 'C':
@@ -1116,11 +1117,11 @@ for linha in botoes_numericos:
             btn = tk.Button(frame_linha, text=tecla, width=3, height=1,
                            font=("Arial", 8), bg="#34495e", fg="#ecf0f1",
                            command=lambda t=tecla: inserir_texto(t))
-        btn.pack(side=tk.LEFT, padx=1, pady=1)  # Menor espaçamento
+        btn.pack(side=tk.LEFT, padx=1, pady=1)
 
 # Teclas de funções especiais (botões menores)
 frame_funcoes = tk.Frame(frame_teclado, bg="#2c3e50")
-frame_funcoes.pack(pady=2, anchor="w")  # Menor padding e alinhado à esquerda
+frame_funcoes.pack(pady=2, anchor="w")
 
 funcoes_especiais = [
     ('sin', 'math.sin('),
@@ -1137,10 +1138,10 @@ for i in range(0, len(funcoes_especiais), 4):
     frame_linha.pack()
     for funcao in funcoes_especiais[i:i+4]:
         texto, comando = funcao
-        btn = tk.Button(frame_linha, text=texto, width=5, height=1,  # Botões menores
+        btn = tk.Button(frame_linha, text=texto, width=5, height=1,
                        font=("Arial", 7), bg="#8e44ad", fg="white",
                        command=lambda c=comando: inserir_texto(c))
-        btn.pack(side=tk.LEFT, padx=1, pady=1)  # Menor espaçamento
+        btn.pack(side=tk.LEFT, padx=1, pady=1)
 
 # Inicializa labels corretos
 atualizar_labels()
